@@ -1,0 +1,51 @@
+                    this.rows[i][temp] = true; //check rows
+                    this.cols[j][temp] = true; //check column
+                    group = getGroup(i, j);
+                    this.groups[group][temp] = true;//check group
+                    //remove the value of temp from the possibilities of all its neighbors
+                    for (int k = 0; k < 9; k++)
+                    {
+                        //check anything in the same row as [i][j]
+                        if (this.remainingValues[i][k][temp] == true)
+                        {
+                            this.remainingValues[i][k][temp] = false;
+                            this.MRV[i][k]--;
+                            //after decrementing the remaining values, if this coordinate has less remaining values than the current one in the queue, make it the front
+                            if (this.MRV[i][k] < this.MRVvalue)
+                            {
+                                this.MRVvalue = this.MRV[i][k];
+                                this.MRVrow = i;
+                                this.MRVcol = k;
+                            }
+                        }
+                        //check anything in the same column as [i][j]
+                        if (this.remainingValues[k][j][temp] == true)
+                        {
+                            this.remainingValues[k][j][temp] = false;
+                            this.MRV[k][j]--;
+                            if (this.MRV[k][j] < this.MRVvalue)
+                            {
+                                this.MRVvalue = this.MRV[i][k];
+                                this.MRVrow = i;
+                                this.MRVcol = k;
+                            }
+                        }
+                    }
+                    // find groupmates
+                    int groupX = (i/3)*3; //i values 0, 1, 2 map to 0, 3, 4, 5 map to 3, etc
+                    int groupY = (j/3)*3;
+                    //check anything in the same group as [i][j]
+                    for (int x = groupX ; x < groupX + 3; x++)
+                    {
+                        for (int y = groupY; y < groupY + 3; y++)
+                        {
+                            if (this.remainingValues[x][y][temp] == true)
+                            {
+                                this.remainingValues[x][y][temp] = false;
+                                this.MRV[x][y]--;
+                                if (this.MRV[x][y] < this.MRVvalue)
+                                {
+                                    this.MRVvalue = this.MRV[x][y];
+                                    this.MRVrow = x;
+                                    this.MRVcol = y;
+                                }
