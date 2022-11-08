@@ -6,12 +6,13 @@ public class App {
         // int a = 3;
         // int b = 2;
         // System.out.printf("2/3 is %d\n", b/a);
-        game.printContents();
+        // game.printContents();
 
         System.out.println("test");
-        boolean bool = game.insert(8, 8, 1);
-        game.printContents();
-        System.out.println(bool);
+        // boolean bool = game.insert(8, 8, 1);
+        game.backtrackingSearch();
+        // game.printContents();
+        // System.out.println(bool);
 
         System.exit(0);
 

@@ -175,11 +175,15 @@ public class Sudoku {
     {
         for (int i = 0; i < 9; i++)
         {
-            for (int element : this.board[i])
+            for (int j = 0; j < 9 ; j++)
             {
-                System.out.printf("%d    ", element);
+                if (i == this.priority.getRow() && j == this.priority.getCol())
+                {
+                    System.out.printf(" *%d", this.board[i][j]);
+                }
+                else
+                System.out.printf("%3d", this.board[i][j]);
             }
-            System.out.println();
             System.out.println();
 
         }
@@ -264,7 +268,7 @@ public class Sudoku {
 
     public boolean checkLegality(int row, int col, int value)
     {
-        int group = (row/3) + (col/3)*3;
+        int group = getGroup(row, col);
         if (this.rows[row][value] == true || this.cols[col][value] == true || this.groups[group][value] == true )
         {
             return false;
@@ -346,23 +350,50 @@ public class Sudoku {
     }
     public void backtrackingSearch()
     {
-
+        search(this);
     }
     public boolean search(Sudoku board)
     // DFS
     {
+        System.err.println("searching");
+        printBoard();
         if (board.tiles == 0)
         {
             return true;
         }
         Sudoku child = new Sudoku();
         copyBoard(board, child);
-        need to insert something
-        if (search(child) == true);
+        System.err.println("checkpoint");
+
+        // need to insert something
+        int i = 1;
+        //while the value is illegal, keep scrolling
+        System.out.println(checkLegality(this.priority.getRow(), this.priority.getCol(), i) == false || i > 9);
+        System.out.println(this.priority.getRow() + " " + this.priority.getCol());
+        while (checkLegality(this.priority.getRow(), this.priority.getCol(), i) == false)
+        {
+            if (i > 9)
+            {
+                return false;
+            }
+            i++;
+        }
+        System.err.println("checkpoint2");
+        System.out.println("insert " + child.insert(this.priority.getRow(), this.priority.getCol(), i));
+bug here
+        // after passing the above while, insert
+        if (!child.insert(this.priority.getRow(), this.priority.getCol(), i))
+        {
+            return false; //safety net
+        }
+        // System.out.println("insert " + child.insert(this.priority.getRow(), this.priority.getCol(), i));
+        child.updatePriority();
+
+        if (search(child) == true); //recursively feed the DFS back up
         {
             board = child;
+            return true;
         }
-        return false;
     }
     public boolean updatePriority()
     {
