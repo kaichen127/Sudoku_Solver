@@ -271,10 +271,12 @@ public class Sudoku {
         int group = getGroup(row, col);
         if (this.rows[row][value] == true || this.cols[col][value] == true || this.groups[group][value] == true )
         {
+            System.out.println("checkLegal is false with row,col " + row + "," + col + " with value " + value);
             return false;
         }
         else
         {
+            System.out.println("checkLegal is true with row,col " + row + "," + col + " with value " + value);
             return true;
         }
     }
@@ -358,7 +360,8 @@ public class Sudoku {
     // DFS
     {
         System.err.println("searching");
-        printContents();
+        // printContents();
+        // printBoard();
         if (board.tiles == 0)
         {
             return true;
@@ -370,8 +373,8 @@ public class Sudoku {
         // need to insert something
         int i = 1;
         //while the value is illegal, keep scrolling
-        System.out.println(checkLegality(this.priority.getRow(), this.priority.getCol(), i));
-        System.out.println(this.priority.getRow() + " " + this.priority.getCol());
+        // System.out.println(checkLegality(this.priority.getRow(), this.priority.getCol(), i));
+        // System.out.println(this.priority.getRow() + " " + this.priority.getCol());
         while (checkLegality(this.priority.getRow(), this.priority.getCol(), i) == false)
         {
             if (i > 9)
@@ -383,10 +386,10 @@ public class Sudoku {
         System.err.println("checkpoint2");
         // System.out.println("insert " + child.insert(this.priority.getRow(), this.priority.getCol(), i));
 
-
-
         // after passing the above while, insert
-        if (child.insert(this.priority.getRow(), this.priority.getCol(), i) == false)
+        System.out.println("inserting " + i + " at " + priority.getRow() + " " + priority.getCol() + "with value " + this.priority.getValue());
+        boolean insertion = child.insert(this.priority.getRow(), this.priority.getCol(), i);
+        if (insertion == false)
         {
             System.out.println("!!!!problem");
             return false; //safety net
@@ -394,7 +397,9 @@ public class Sudoku {
 
         // System.out.println("insert " + child.insert(this.priority.getRow(), this.priority.getCol(), i));
         child.updatePriority();
-        child.printContents();
+        child.printBoard();
+
+        // child.printContents();
         System.out.println("child is " + search(child));
         if (search(child) == true); //recursively feed the DFS back up
         {
