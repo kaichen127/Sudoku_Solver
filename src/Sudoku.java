@@ -375,7 +375,7 @@ public class Sudoku {
         //while the value is illegal, keep scrolling
         // System.out.println(checkLegality(this.priority.getRow(), this.priority.getCol(), i));
         // System.out.println(this.priority.getRow() + " " + this.priority.getCol());
-        while (checkLegality(this.priority.getRow(), this.priority.getCol(), i) == false)
+        while (child.checkLegality(this.priority.getRow(), this.priority.getCol(), i) == false)
         {
             if (i > 9)
             {
@@ -383,7 +383,6 @@ public class Sudoku {
             }
             i++;
         }
-        System.err.println("checkpoint2");
         // System.out.println("insert " + child.insert(this.priority.getRow(), this.priority.getCol(), i));
 
         // after passing the above while, insert
@@ -397,7 +396,8 @@ public class Sudoku {
 
         // System.out.println("insert " + child.insert(this.priority.getRow(), this.priority.getCol(), i));
         child.updatePriority();
-        child.printBoard();
+        // child.printBoard();
+        child.printContents();
 
         // child.printContents();
         System.out.println("child is " + search(child));
