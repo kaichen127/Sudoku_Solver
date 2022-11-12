@@ -410,7 +410,7 @@ public class Sudoku {
         //while the value is illegal, keep scrolling
         // System.out.println(checkLegality(this.priority.getRow(), this.priority.getCol(), i));
         // System.out.println(this.priority.getRow() + " " + this.priority.getCol());
-        while (child.checkLegality(this.priority.getRow(), this.priority.getCol(), i) == false)
+        while (child.checkLegality(this.priority.getRow(), this.priority.getCol(), i) == false)  <<-------- turn into a for loop
         {
 
             i++;
