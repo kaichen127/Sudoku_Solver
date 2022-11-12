@@ -9,9 +9,12 @@ public class App {
         // game.printContents();
 
         // boolean bool = game.insert(8, 8, 1);
-        game.backtrackingSearch();
+        // game.backtrackingSearch();
         // game.printContents();
         // System.out.println(bool);
+
+        Sudoku game2 = new Sudoku(2);
+        game2.backtrackingSearch();
 
         System.exit(0);
 

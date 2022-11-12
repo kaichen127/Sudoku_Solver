@@ -80,7 +80,28 @@ public class Sudoku {
         }
         if (version == 2)
         {
-
+            this.board[0][2] = 5;
+            this.board[0][4] = 1;
+            this.board[1][2] = 2;
+            this.board[1][5] = 4;
+            this.board[1][7] = 3;
+            this.board[2][0] = 1;
+            this.board[2][2] = 9;
+            this.board[2][6] = 2;
+            this.board[2][8] = 6;
+            this.board[3][0] = 2;
+            this.board[3][4] = 3;
+            this.board[4][1] = 4;
+            this.board[4][6] = 7;
+            this.board[5][0] = 5;
+            this.board[5][5] = 7;
+            this.board[5][8] = 1;
+            this.board[6][3] = 6;
+            this.board[6][5] = 3;
+            this.board[7][1] = 6;
+            this.board[7][3] = 1;
+            this.board[8][4] = 7;
+            this.board[8][7] = 5;
         }
         if (version >= 3)
         {
@@ -271,12 +292,12 @@ public class Sudoku {
         int group = getGroup(row, col);
         if (this.rows[row][value] == true || this.cols[col][value] == true || this.groups[group][value] == true )
         {
-            // System.out.println("checkLegal is false with row,col " + row + "," + col + " with value " + value);
+            System.out.println("checkLegal is false with row,col " + row + "," + col + " with value " + value);
             return false;
         }
         else
         {
-            // System.out.println("checkLegal is true with row,col " + row + "," + col + " with value " + value);
+            System.out.println("checkLegal is true with row,col " + row + "," + col + " with value " + value);
             return true;
         }
     }
@@ -361,6 +382,7 @@ public class Sudoku {
         System.out.println();
         if (success)
         {
+            System.out.println("Success!");
             System.out.println("After search:");
             printBoard();
         }
@@ -390,11 +412,12 @@ public class Sudoku {
         // System.out.println(this.priority.getRow() + " " + this.priority.getCol());
         while (child.checkLegality(this.priority.getRow(), this.priority.getCol(), i) == false)
         {
+
+            i++;
             if (i > 9)
             {
                 return false;
             }
-            i++;
         }
         // System.out.println("insert " + child.insert(this.priority.getRow(), this.priority.getCol(), i));
 
@@ -416,10 +439,15 @@ public class Sudoku {
 
         // child.printContents();
         // System.out.println("child is " + search(child));
-        if (search(child) == true); //recursively feed the DFS back up
+        if (search(child) == true) //recursively feed the DFS back up
         {
             copyBoard(child, board);
             return true;
+        }
+        else 
+        {
+            copyBoard(child,board);
+            return false;
         }
     }
     public boolean updatePriority()
