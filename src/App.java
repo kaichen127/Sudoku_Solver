@@ -8,7 +8,6 @@ public class App {
         // System.out.printf("2/3 is %d\n", b/a);
         // game.printContents();
 
-        System.out.println("test");
         // boolean bool = game.insert(8, 8, 1);
         game.backtrackingSearch();
         // game.printContents();

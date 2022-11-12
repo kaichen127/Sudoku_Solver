@@ -271,10 +271,12 @@ public class Sudoku {
         int group = getGroup(row, col);
         if (this.rows[row][value] == true || this.cols[col][value] == true || this.groups[group][value] == true )
         {
+            // System.out.println("checkLegal is false with row,col " + row + "," + col + " with value " + value);
             return false;
         }
         else
         {
+            // System.out.println("checkLegal is true with row,col " + row + "," + col + " with value " + value);
             return true;
         }
     }
@@ -286,6 +288,8 @@ public class Sudoku {
         {
             this.tiles--;
             this.board[row][col] = value;
+            // after inserting, update MRV
+            this.MRV[row][col] = 99;
             this.cols[col][value] = true;
             this.rows[row][value] = true;
             this.groups[getGroup(row, col)][value] = true;
@@ -350,27 +354,41 @@ public class Sudoku {
     }
     public void backtrackingSearch()
     {
-        search(this);
+        System.out.println("Before search:");
+        printBoard();
+        System.out.println();
+        boolean success = search(this);
+        System.out.println();
+        if (success)
+        {
+            System.out.println("After search:");
+            printBoard();
+        }
+        else
+        {
+            System.out.println("Unable to find a solution.");
+            printBoard();
+        }
+
     }
     public boolean search(Sudoku board)
     // DFS
     {
-        System.err.println("searching");
-        printBoard();
+        // printContents();
+        // printBoard();
         if (board.tiles == 0)
         {
             return true;
         }
         Sudoku child = new Sudoku();
         copyBoard(board, child);
-        System.err.println("checkpoint");
 
         // need to insert something
         int i = 1;
         //while the value is illegal, keep scrolling
-        System.out.println(checkLegality(this.priority.getRow(), this.priority.getCol(), i) == false || i > 9);
-        System.out.println(this.priority.getRow() + " " + this.priority.getCol());
-        while (checkLegality(this.priority.getRow(), this.priority.getCol(), i) == false)
+        // System.out.println(checkLegality(this.priority.getRow(), this.priority.getCol(), i));
+        // System.out.println(this.priority.getRow() + " " + this.priority.getCol());
+        while (child.checkLegality(this.priority.getRow(), this.priority.getCol(), i) == false)
         {
             if (i > 9)
             {
@@ -378,25 +396,35 @@ public class Sudoku {
             }
             i++;
         }
-        System.err.println("checkpoint2");
-        System.out.println("insert " + child.insert(this.priority.getRow(), this.priority.getCol(), i));
-bug here
+        // System.out.println("insert " + child.insert(this.priority.getRow(), this.priority.getCol(), i));
+
         // after passing the above while, insert
-        if (!child.insert(this.priority.getRow(), this.priority.getCol(), i))
+        // System.out.println("inserting " + i + " at " + priority.getRow() + " , " + priority.getCol() + "with value " + this.priority.getValue());
+        System.out.println("inserting " + i + " at " + priority.getRow() + ", " + priority.getCol());
+
+        boolean insertion = child.insert(this.priority.getRow(), this.priority.getCol(), i);
+        if (insertion == false)
         {
+            System.out.println("!!!!problem");
             return false; //safety net
         }
+
         // System.out.println("insert " + child.insert(this.priority.getRow(), this.priority.getCol(), i));
         child.updatePriority();
+        // child.printBoard();
+        // child.printContents();
 
+        // child.printContents();
+        // System.out.println("child is " + search(child));
         if (search(child) == true); //recursively feed the DFS back up
         {
-            board = child;
+            copyBoard(child, board);
             return true;
         }
     }
     public boolean updatePriority()
     {
+        this.priority.setValue(99);
         boolean change = false;
         for (int i = 0; i < 9; i++ )
         {
