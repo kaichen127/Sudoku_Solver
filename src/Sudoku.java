@@ -1,5 +1,3 @@
-// need to implement tiebreaks
-
 public class Sudoku {
     private int[][] board;
     private boolean[][] rows;
@@ -105,6 +103,29 @@ public class Sudoku {
         }
         if (version >= 3)
         {
+            this.board[0][0] = 6;
+            this.board[0][1] = 7;
+            this.board[1][1] = 2;
+            this.board[1][2] = 5;
+            this.board[2][1] = 9;
+            this.board[2][3] = 5;
+            this.board[2][4] = 6;
+            this.board[2][6] = 2;
+            this.board[3][0] = 3;
+            this.board[3][4] = 8;
+            this.board[3][6] = 9;
+            this.board[4][6] = 8;
+            this.board[4][8] = 1;
+            this.board[5][3] = 4;
+            this.board[5][4] = 7;
+            this.board[6][2] = 8;
+            this.board[6][3] = 6;
+            this.board[6][7] = 9;
+            this.board[7][7] = 1;
+            this.board[8][0] = 1;
+            this.board[8][2] = 6;
+            this.board[8][4] = 5;
+            this.board[8][7] = 7;
 
         }
         this.scanBoard();
@@ -289,15 +310,16 @@ public class Sudoku {
 
     public boolean checkLegality(int row, int col, int value)
     {
+        // printBoard();
         int group = getGroup(row, col);
         if (this.rows[row][value] == true || this.cols[col][value] == true || this.groups[group][value] == true )
         {
-            System.out.println("checkLegal is false with row,col " + row + "," + col + " with value " + value);
+            // System.out.println("checkLegal is false with row,col " + row + "," + col + " with value " + value);
             return false;
         }
         else
         {
-            System.out.println("checkLegal is true with row,col " + row + "," + col + " with value " + value);
+            // System.out.println("checkLegal is true with row,col " + row + "," + col + " with value " + value);
             return true;
         }
     }
@@ -366,6 +388,8 @@ public class Sudoku {
                 }
             }
             this.MRV[row][col] = 99; //set MRV to an arbitrarily high number
+            this.updatePriority(); // change to a new priority now that MRVs have changed
+            // System.out.println("insert success!");
             return true;
         }
         else
@@ -396,59 +420,41 @@ public class Sudoku {
     public boolean search(Sudoku board)
     // DFS
     {
-        // printContents();
-        // printBoard();
         if (board.tiles == 0)
         {
             return true;
         }
-        Sudoku child = new Sudoku();
-        copyBoard(board, child);
-
-        // need to insert something
-        int i = 1;
-        //while the value is illegal, keep scrolling
-        // System.out.println(checkLegality(this.priority.getRow(), this.priority.getCol(), i));
-        // System.out.println(this.priority.getRow() + " " + this.priority.getCol());
-        while (child.checkLegality(this.priority.getRow(), this.priority.getCol(), i) == false)  <<-------- turn into a for loop
+        //create a child process for every single possible insertion
+        for (int i= 1; i < 10; i++)
         {
-
-            i++;
-            if (i > 9)
+            // if true, create a child and insert i
+            if (board.checkLegality(board.priority.getRow(), board.priority.getCol(), i) == true)
             {
-                return false;
+                Sudoku child = new Sudoku();
+                copyBoard(board, child);
+ 
+                System.out.println("inserting " + i + " at " + board.priority.getRow() + ", " + board.priority.getCol());
+
+                //inserting
+                if (child.insert(board.priority.getRow(), board.priority.getCol(), i) == false)
+                {
+                    System.out.println("problem occured");
+                    return false; //safety net
+                }
+ 
+                boolean searchSuccess = search(child);
+                if (searchSuccess == true) //recursively feed the DFS back up
+                {
+                    copyBoard(child, board);
+                    return true; //ends the program early if a solution is found
+                }
+                else 
+                {
+                    //if false, do nothing and let i increment
+                }
             }
         }
-        // System.out.println("insert " + child.insert(this.priority.getRow(), this.priority.getCol(), i));
-
-        // after passing the above while, insert
-        // System.out.println("inserting " + i + " at " + priority.getRow() + " , " + priority.getCol() + "with value " + this.priority.getValue());
-        System.out.println("inserting " + i + " at " + priority.getRow() + ", " + priority.getCol());
-
-        boolean insertion = child.insert(this.priority.getRow(), this.priority.getCol(), i);
-        if (insertion == false)
-        {
-            System.out.println("!!!!problem");
-            return false; //safety net
-        }
-
-        // System.out.println("insert " + child.insert(this.priority.getRow(), this.priority.getCol(), i));
-        child.updatePriority();
-        // child.printBoard();
-        // child.printContents();
-
-        // child.printContents();
-        // System.out.println("child is " + search(child));
-        if (search(child) == true) //recursively feed the DFS back up
-        {
-            copyBoard(child, board);
-            return true;
-        }
-        else 
-        {
-            copyBoard(child,board);
-            return false;
-        }
+        return false;
     }
     public boolean updatePriority()
     {
@@ -484,7 +490,7 @@ public class Sudoku {
                 System.arraycopy(copy.remainingValues[i][j], 0, copier.remainingValues[i][j], 0, copy.remainingValues[i][j].length);
             }
         }
-        copier.priority = copy.priority;
+        copier.priority.copyCoordinate(copy.priority, copier.priority);
         copier.tiles = copy.tiles;
     }
 }

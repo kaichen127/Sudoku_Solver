@@ -56,4 +56,11 @@ public class Coordinate {
         this.value = x;
     }
 
+    public void copyCoordinate(Coordinate copy, Coordinate copier)
+    {
+        copier.col = copy.col;
+        copier.row = copy.row;
+        copier.value = copy.value;
+    }
+
 }
