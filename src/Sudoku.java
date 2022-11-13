@@ -433,7 +433,7 @@ public class Sudoku {
                 Sudoku child = new Sudoku();
                 copyBoard(board, child);
  
-                System.out.println("inserting " + i + " at " + board.priority.getRow() + ", " + board.priority.getCol());
+                // System.out.println("inserting " + i + " at " + board.priority.getRow() + ", " + board.priority.getCol());
 
                 //inserting
                 if (child.insert(board.priority.getRow(), board.priority.getCol(), i) == false)
