@@ -6,7 +6,6 @@ public class Sudoku {
     private boolean[][] groups;
     private boolean[][][] remainingValues; // keep track of each coordinate's remaining values, and how many values they have left (maybe not most efficient?)
     private int[][] MRV;
-    // might have to make a stack of coordinates
     private Coordinate priority;
     private int[][] degree;
     private int tiles;
@@ -224,7 +223,9 @@ public class Sudoku {
                     System.out.printf(" *%d", this.board[i][j]);
                 }
                 else
-                System.out.printf("%3d", this.board[i][j]);
+                {
+                    System.out.printf("%3d", this.board[i][j]);
+                }
             }
             System.out.println();
 
@@ -401,19 +402,22 @@ public class Sudoku {
     {
         System.out.println("Before search:");
         printBoard();
+        // printContents();
         System.out.println();
         boolean success = search(this);
-        System.out.println();
+        // System.out.println();
         if (success)
         {
             System.out.println("Success!");
             System.out.println("After search:");
             printBoard();
+            // printContents();
         }
         else
         {
             System.out.println("Unable to find a solution.");
             printBoard();
+            // printContents();
         }
 
     }
@@ -433,7 +437,7 @@ public class Sudoku {
                 Sudoku child = new Sudoku();
                 copyBoard(board, child);
  
-                // System.out.println("inserting " + i + " at " + board.priority.getRow() + ", " + board.priority.getCol());
+                // System.out.println("inserting " + i + " at " + board.priority.getRow() + ", " + board.priority.getCol() + " with " + board.MRV[board.priority.getRow()][board.priority.getCol()] + " remaining value(s) and with a degree of " + board.degree[board.priority.getRow()][board.priority.getCol()] );
 
                 //inserting
                 if (child.insert(board.priority.getRow(), board.priority.getCol(), i) == false)
